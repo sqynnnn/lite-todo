@@ -261,18 +261,18 @@ export const ModularPage: React.FC<ModularPageProps> = ({ storageKey, title, ico
   const breadcrumbs = getBreadcrumbs();
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="space-y-4 md:space-y-6 animate-fade-in">
       
       {/* Header & Breadcrumbs */}
       <div className="flex flex-col gap-4">
         <div className="flex justify-between items-center">
-          <div className="flex items-center gap-3">
-            <div className={`p-3 rounded-xl bg-${color}/10 text-${color}`}>
-              <Icon size={24} />
+          <div className="flex items-center gap-2 md:gap-3">
+            <div className={`p-2 md:p-3 rounded-xl bg-${color}/10 text-${color}`}>
+              <Icon size={20} className="md:w-6 md:h-6" />
             </div>
             <div>
-              <h2 className="text-2xl font-bold text-white">{title}</h2>
-              <div className="flex items-center gap-1 text-xs text-gray-500 mt-1">
+              <h2 className="text-xl md:text-2xl font-bold text-white">{title}</h2>
+              <div className="flex items-center gap-1 text-[10px] md:text-xs text-gray-500 mt-1">
                  <button 
                    onClick={() => navigateToBreadcrumb(null)} 
                    className={`hover:text-${color} ${currentFolderId === null ? 'text-gray-300' : ''}`}
@@ -295,9 +295,9 @@ export const ModularPage: React.FC<ModularPageProps> = ({ storageKey, title, ico
           </div>
           <button 
             onClick={() => setShowCreateModal(true)}
-            className={`bg-${color} text-black px-4 py-2 rounded-xl font-bold flex items-center gap-2 hover:opacity-90 shadow-lg shadow-${color}/20`}
+            className={`bg-${color} text-black px-2 py-1 md:px-4 md:py-2 text-[10px] md:text-sm rounded-lg md:rounded-xl font-bold flex items-center gap-1 md:gap-2 hover:opacity-90 shadow-lg shadow-${color}/20`}
           >
-            <Plus size={18} /> New
+            <Plus size={12} className="md:w-5 md:h-5" /> New
           </button>
         </div>
       </div>
@@ -341,14 +341,14 @@ export const ModularPage: React.FC<ModularPageProps> = ({ storageKey, title, ico
       )}
 
       {/* Grid View */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 min-h-[300px] content-start">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-4 min-h-[300px] content-start">
         {currentFolderId && (
           <div 
             onClick={navigateUp}
-            className="border border-dashed border-gray-700 p-6 rounded-2xl flex items-center gap-4 cursor-pointer hover:bg-white/5 transition text-gray-500"
+            className="border border-dashed border-gray-700 p-3 md:p-6 rounded-xl md:rounded-2xl flex items-center gap-4 cursor-pointer hover:bg-white/5 transition text-gray-500"
           >
-            <CornerUpLeft size={24} />
-            <span className="font-bold">Up one level</span>
+            <CornerUpLeft size={20} className="md:w-6 md:h-6" />
+            <span className="font-bold text-xs md:text-base">Up one level</span>
           </div>
         )}
 
@@ -364,35 +364,32 @@ export const ModularPage: React.FC<ModularPageProps> = ({ storageKey, title, ico
               onDragLeave={handleDragLeave}
               onDrop={(e) => handleDrop(e, folder.id)}
               onClick={() => enterFolder(folder.id)}
-              className={`group bg-card border p-6 rounded-2xl cursor-pointer transition-all relative flex flex-col justify-between 
+              className={`group bg-card border p-3 md:p-6 rounded-xl md:rounded-2xl cursor-pointer transition-all relative flex flex-col justify-between 
                 ${isDragTarget ? `border-${color} border-2 border-dashed bg-${color}/5 scale-105` : 'border-gray-800 hover:border-gray-500'}
               `}
             >
-              <div className="flex items-start justify-between mb-4 pointer-events-none">
-                <div className="p-3 rounded-xl bg-blue-500/10 text-blue-500">
-                  <Folder size={24} fill="currentColor" fillOpacity={0.2} />
+              <div className="flex items-start justify-between mb-2 md:mb-4 pointer-events-none">
+                <div className="p-2 md:p-3 rounded-xl bg-blue-500/10 text-blue-500">
+                  <Folder size={20} className="md:w-6 md:h-6" fill="currentColor" fillOpacity={0.2} />
                 </div>
-                {/* Pointer events auto needed on button because parent has pointer-events-none? No, I put pointer-events-none on the header div, 
-                    but the button needs to be clickable. Actually, better to just NOT disable pointer events on parent and rely on stopPropagation.
-                */}
               </div>
               
               {/* Delete Button (Absolute Positioned, High Z-Index, Explicit Handler) */}
               <div 
-                className="absolute top-6 right-6 z-20"
+                className="absolute top-2 right-2 md:top-6 md:right-6 z-20"
                 onClick={(e) => handleDelete(e, folder.id)}
               >
                  <button 
-                  className="p-2 text-gray-600 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition"
+                  className="p-1 md:p-2 text-gray-600 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition"
                   title="Delete Folder"
                 >
-                  <Trash2 size={16} />
+                  <Trash2 size={14} className="md:w-4 md:h-4" />
                 </button>
               </div>
 
               <div>
-                 <h3 className="text-lg font-bold text-white mb-1">{folder.title}</h3>
-                 <p className="text-xs text-gray-500">{getCurrentFolderItems().filter(i => i.parentId === folder.id).length} items inside</p>
+                 <h3 className="text-sm md:text-lg font-bold text-white mb-1 truncate">{folder.title}</h3>
+                 <p className="text-[10px] md:text-xs text-gray-500">{getCurrentFolderItems().filter(i => i.parentId === folder.id).length} items</p>
               </div>
             </div>
           );
@@ -405,31 +402,31 @@ export const ModularPage: React.FC<ModularPageProps> = ({ storageKey, title, ico
             draggable
             onDragStart={(e) => handleDragStart(e, page.id)}
             onClick={() => openFile(page)}
-            className={`group bg-card border border-gray-800 p-6 rounded-2xl hover:border-gray-500 cursor-pointer transition-all relative flex flex-col justify-between opacity-${draggedItemId === page.id ? '50' : '100'}`}
+            className={`group bg-card border border-gray-800 p-3 md:p-6 rounded-xl md:rounded-2xl hover:border-gray-500 cursor-pointer transition-all relative flex flex-col justify-between opacity-${draggedItemId === page.id ? '50' : '100'}`}
           >
-            <div className="flex items-start justify-between mb-4">
-              <div className={`p-3 rounded-xl bg-${color}/5 text-${color}`}>
-                <FileText size={24} />
+            <div className="flex items-start justify-between mb-2 md:mb-4">
+              <div className={`p-2 md:p-3 rounded-xl bg-${color}/5 text-${color}`}>
+                <FileText size={20} className="md:w-6 md:h-6" />
               </div>
             </div>
 
             {/* Delete Button */}
             <div 
-                className="absolute top-6 right-6 z-20"
+                className="absolute top-2 right-2 md:top-6 md:right-6 z-20"
                 onClick={(e) => handleDelete(e, page.id)}
               >
                  <button 
-                  className="p-2 text-gray-600 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition"
+                  className="p-1 md:p-2 text-gray-600 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition"
                   title="Delete Page"
                 >
-                  <Trash2 size={16} />
+                  <Trash2 size={14} className="md:w-4 md:h-4" />
                 </button>
             </div>
 
             <div>
-              <h3 className="text-lg font-bold text-white mb-2 line-clamp-1">{page.title}</h3>
-              <p className="text-sm text-gray-400 line-clamp-2 h-10">{page.subtitle}</p>
-              <div className="mt-4 text-[10px] text-gray-600 font-mono">
+              <h3 className="text-sm md:text-lg font-bold text-white mb-1 md:mb-2 line-clamp-1">{page.title}</h3>
+              <p className="text-[10px] md:text-sm text-gray-400 line-clamp-2 h-8 md:h-10">{page.subtitle}</p>
+              <div className="mt-2 md:mt-4 text-[9px] md:text-[10px] text-gray-600 font-mono">
                 {new Date(page.updatedAt).toLocaleDateString()}
               </div>
             </div>
@@ -439,10 +436,10 @@ export const ModularPage: React.FC<ModularPageProps> = ({ storageKey, title, ico
         {currentItems.length === 0 && (
           <div 
             onClick={() => setShowCreateModal(true)}
-            className="border-2 border-dashed border-gray-800 rounded-2xl p-6 flex flex-col items-center justify-center text-gray-600 cursor-pointer hover:border-gray-600 hover:text-gray-400 transition min-h-[200px]"
+            className="border-2 border-dashed border-gray-800 rounded-2xl p-6 flex flex-col items-center justify-center text-gray-600 cursor-pointer hover:border-gray-600 hover:text-gray-400 transition min-h-[150px] md:min-h-[200px]"
           >
-            <Plus size={32} className="mb-2" />
-            <span className="font-bold">Empty Folder. Create Something.</span>
+            <Plus size={24} className="mb-2 md:w-8 md:h-8" />
+            <span className="font-bold text-xs md:text-base">Empty Folder. Create Something.</span>
           </div>
         )}
       </div>

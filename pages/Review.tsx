@@ -170,46 +170,61 @@ export const Review: React.FC = () => {
         <div className="space-y-6">
           {/* Controls */}
           <div className="bg-card p-4 rounded-xl border border-gray-800 flex flex-col md:flex-row justify-between items-center gap-4">
-             <div className="flex items-center gap-2 w-full md:w-auto">
-               <div className="flex items-center gap-2 bg-bg px-3 py-2 rounded-lg border border-gray-700">
-                  <span className="text-gray-500 text-xs">Start</span>
-                  <input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} className="bg-transparent text-white text-sm outline-none" />
+             {/* Responsive Date Picker */}
+             <div className="grid grid-cols-2 gap-2 w-full md:flex md:w-auto md:items-center">
+               <div className="flex items-center gap-2 bg-bg px-2 py-2 rounded-lg border border-gray-700 w-full md:w-auto">
+                  <span className="text-gray-500 text-[10px] uppercase font-bold">Start</span>
+                  <input 
+                    type="date" 
+                    value={startDate} 
+                    onChange={e => setStartDate(e.target.value)} 
+                    className="bg-transparent text-white text-xs md:text-sm outline-none w-full" 
+                  />
                </div>
-               <span className="text-gray-500">-</span>
-               <div className="flex items-center gap-2 bg-bg px-3 py-2 rounded-lg border border-gray-700">
-                  <span className="text-gray-500 text-xs">End</span>
-                  <input type="date" value={endDate} onChange={e => setEndDate(e.target.value)} className="bg-transparent text-white text-sm outline-none" />
+               
+               <div className="hidden md:block text-gray-500">-</div>
+
+               <div className="flex items-center gap-2 bg-bg px-2 py-2 rounded-lg border border-gray-700 w-full md:w-auto">
+                  <span className="text-gray-500 text-[10px] uppercase font-bold">End</span>
+                  <input 
+                    type="date" 
+                    value={endDate} 
+                    onChange={e => setEndDate(e.target.value)} 
+                    className="bg-transparent text-white text-xs md:text-sm outline-none w-full" 
+                  />
                </div>
              </div>
              
-             <button onClick={saveCurrentReport} className="bg-gold/20 text-gold px-4 py-2 rounded-lg font-bold flex items-center gap-2 hover:bg-gold/30 w-full md:w-auto justify-center">
-               <Save size={18} /> Save to Archive
+             <button onClick={saveCurrentReport} className="bg-gold/20 text-gold px-4 py-2 rounded-lg font-bold flex items-center gap-2 hover:bg-gold/30 w-full md:w-auto justify-center text-sm">
+               <Save size={16} /> Save to Archive
              </button>
           </div>
 
           {/* Stats Overview */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
              {/* Chart */}
-             <div className="bg-card p-6 rounded-2xl border border-gray-800 shadow-xl min-h-[300px]">
+             <div className="bg-card p-4 md:p-6 rounded-2xl border border-gray-800 shadow-xl min-h-[160px] md:min-h-[300px]">
                <h3 className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-4">Activity Volume</h3>
-               <ResponsiveContainer width="100%" height={250}>
-                 <BarChart data={chartData}>
-                   <XAxis dataKey="name" stroke="#4b5563" tick={{fontSize: 10}} />
-                   <Tooltip contentStyle={{ backgroundColor: '#1E1E24', borderRadius: '8px', border: '1px solid #374151' }} />
-                   <Bar dataKey="count" fill="#4ECDC4" radius={[4, 4, 0, 0]} />
-                 </BarChart>
-               </ResponsiveContainer>
+               <div className="h-[140px] md:h-[250px] w-full">
+                 <ResponsiveContainer width="100%" height="100%">
+                   <BarChart data={chartData}>
+                     <XAxis dataKey="name" stroke="#4b5563" tick={{fontSize: 10}} />
+                     <Tooltip contentStyle={{ backgroundColor: '#1E1E24', borderRadius: '8px', border: '1px solid #374151' }} />
+                     <Bar dataKey="count" fill="#4ECDC4" radius={[4, 4, 0, 0]} />
+                   </BarChart>
+                 </ResponsiveContainer>
+               </div>
              </div>
 
              {/* Habit Consistency */}
-             <div className="bg-card p-6 rounded-2xl border border-gray-800 shadow-xl">
+             <div className="bg-card p-4 md:p-6 rounded-2xl border border-gray-800 shadow-xl">
                <h3 className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-4">Habit Consistency</h3>
                <div className="space-y-3 max-h-[250px] overflow-y-auto pr-2 custom-scrollbar">
                   {reportStats?.routineConsistency.map((item: any, i: number) => (
                     <div key={i} className="flex justify-between items-center p-2 rounded bg-bg/50">
-                      <span className="text-gray-200 text-sm">{item.title}</span>
+                      <span className="text-gray-200 text-sm truncate max-w-[50%]">{item.title}</span>
                       <div className="flex items-center gap-3">
-                        <div className="w-24 h-2 bg-gray-700 rounded-full overflow-hidden">
+                        <div className="w-16 md:w-24 h-2 bg-gray-700 rounded-full overflow-hidden">
                           <div className="h-full bg-cyan" style={{width: `${item.percent}%`}}></div>
                         </div>
                         <span className="text-xs font-mono text-cyan w-8 text-right">{item.count}d</span>
@@ -225,16 +240,16 @@ export const Review: React.FC = () => {
 
           {/* AI Prompt Section */}
           <div className="bg-gradient-to-br from-card to-gray-900 border border-gray-700 rounded-2xl p-6">
-             <div className="flex justify-between items-start mb-4">
+             <div className="flex flex-col md:flex-row justify-between items-start mb-4 gap-4">
                <div>
-                 <h3 className="text-xl font-bold text-white flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div> AI Coach Prompt</h3>
+                 <h3 className="text-lg md:text-xl font-bold text-white flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div> AI Coach Prompt</h3>
                  <p className="text-gray-400 text-sm mt-1">Copy this and paste it into ChatGPT/Claude for a deep analysis.</p>
                </div>
                <button 
                 onClick={copyToClipboard}
-                className="bg-cyan text-black px-4 py-2 rounded-xl font-bold flex items-center gap-2 hover:opacity-90 transition-all active:scale-95"
+                className="w-full md:w-auto bg-cyan text-black px-4 py-2 rounded-xl font-bold flex items-center justify-center gap-2 hover:opacity-90 transition-all active:scale-95 text-sm"
                >
-                 {copyFeedback ? <CheckIcon /> : <Copy size={18} />}
+                 {copyFeedback ? <CheckIcon /> : <Copy size={16} />}
                  {copyFeedback || 'Copy Prompt'}
                </button>
              </div>
@@ -253,7 +268,7 @@ export const Review: React.FC = () => {
              <div key={report.id} className="bg-card border border-gray-800 rounded-2xl overflow-hidden">
                <div className="p-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-gray-900/50">
                   <div>
-                    <h4 className="text-white font-bold">{report.dateRange.start} <span className="text-gray-600 px-1">to</span> {report.dateRange.end}</h4>
+                    <h4 className="text-white font-bold text-sm md:text-base">{report.dateRange.start} <span className="text-gray-600 px-1">to</span> {report.dateRange.end}</h4>
                     <span className="text-xs text-gray-500">Generated: {new Date(report.generatedDate).toLocaleDateString()}</span>
                   </div>
                   <div className="flex gap-2">
@@ -261,7 +276,7 @@ export const Review: React.FC = () => {
                       onClick={() => setEditingReportId(editingReportId === report.id ? null : report.id)}
                       className="text-cyan text-sm flex items-center gap-1 hover:underline"
                     >
-                       <FileText size={16} /> {editingReportId === report.id ? 'Close Notes' : 'View Notes'}
+                       <FileText size={16} /> {editingReportId === report.id ? 'Close' : 'Notes'}
                      </button>
                      <button onClick={() => deleteReport(report.id)} className="text-gray-600 hover:text-red-500"><Archive size={16}/></button>
                   </div>

@@ -54,53 +54,54 @@ export const Dashboard: React.FC = () => {
   };
 
   return (
-    <div className="space-y-8 animate-fade-in">
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+    <div className="space-y-6 animate-fade-in pb-20">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-2 md:gap-4">
         <div>
-          <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">Welcome back, <span className="text-cyan">{profile.name}</span>.</h1>
-          <p className="text-gray-400">Status: <span className="text-green-500">{profile.status}</span></p>
+          <h1 className="text-2xl md:text-4xl font-bold text-white mb-1">Welcome back, <span className="text-cyan">{profile.name}</span>.</h1>
+          <p className="text-xs md:text-base text-gray-400">Status: <span className="text-green-500">{profile.status}</span></p>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      {/* Modules Grid - Horizontal on mobile for compactness */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
         {MODULES.map((mod) => (
           <button
             key={mod.id}
             onClick={() => navigate(mod.path)}
-            className={`group p-6 rounded-2xl border ${mod.color.replace('text', 'border')} flex flex-col items-start gap-4 transition-all hover:scale-[1.02] bg-card`}
+            className={`group p-4 md:p-6 rounded-2xl border ${mod.color.replace('text', 'border')} flex flex-row items-center md:flex-col md:items-start gap-4 transition-all hover:scale-[1.02] bg-card`}
           >
-            <div className={`p-3 rounded-xl ${mod.color}`}>
-              <mod.icon size={24} />
+            <div className={`p-2 md:p-3 rounded-xl ${mod.color} shrink-0`}>
+              <mod.icon size={20} className="md:w-6 md:h-6" />
             </div>
-            <div className="text-left">
-              <h3 className="text-lg font-bold text-white mb-1 group-hover:text-cyan transition-colors">{mod.title}</h3>
-              <p className="text-sm text-gray-400">{mod.desc}</p>
+            <div className="text-left flex-1">
+              <h3 className="text-base md:text-lg font-bold text-white md:mb-1 group-hover:text-cyan transition-colors">{mod.title}</h3>
+              <p className="text-xs md:text-sm text-gray-400 line-clamp-1 md:line-clamp-2">{mod.desc}</p>
             </div>
           </button>
         ))}
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
         {/* Memo Widget */}
-        <div className="md:col-span-2 bg-card border border-gray-800 rounded-2xl p-6 flex flex-col">
-          <div className="flex items-center gap-2 mb-4 text-gold">
-            <StickyNote size={20} />
-            <h3 className="font-bold text-white">Quick Memo / Scratchpad</h3>
+        <div className="md:col-span-2 bg-card border border-gray-800 rounded-2xl p-4 md:p-6 flex flex-col">
+          <div className="flex items-center gap-2 mb-3 text-gold">
+            <StickyNote size={18} />
+            <h3 className="font-bold text-white text-sm md:text-base">Quick Memo</h3>
           </div>
           <textarea 
             value={memo}
             onChange={handleMemoChange}
-            placeholder="Type your thoughts, reminders, or quick notes here..."
-            className="flex-1 bg-bg/50 border border-gray-700 rounded-xl p-4 text-gray-300 focus:border-cyan focus:outline-none resize-none min-h-[150px]"
+            placeholder="Type your thoughts..."
+            className="flex-1 bg-bg/50 border border-gray-700 rounded-xl p-3 text-sm text-gray-300 focus:border-cyan focus:outline-none resize-none min-h-[100px] md:min-h-[150px]"
           />
         </div>
         
         {/* Quote Widget */}
-        <div className="bg-gradient-to-br from-card to-bg border border-gray-800 rounded-2xl p-6 relative overflow-hidden flex flex-col justify-center">
+        <div className="bg-gradient-to-br from-card to-bg border border-gray-800 rounded-2xl p-4 md:p-6 relative overflow-hidden flex flex-col justify-center min-h-[120px]">
           <div className="relative z-10">
-            <h3 className="text-sm font-bold text-gray-500 uppercase tracking-widest mb-4">Daily Insight</h3>
-            <p className="text-white italic text-lg font-serif mb-4">"{quote.text}"</p>
-            <p className="text-cyan text-sm">— {quote.author}</p>
+            <h3 className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Daily Insight</h3>
+            <p className="text-white italic text-sm md:text-lg font-serif mb-2">"{quote.text}"</p>
+            <p className="text-cyan text-xs">— {quote.author}</p>
           </div>
           <div className="absolute right-0 top-0 w-64 h-64 bg-cyan/5 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none"></div>
         </div>

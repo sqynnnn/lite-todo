@@ -223,148 +223,154 @@ export const Daily: React.FC = () => {
   );
 
   return (
-    <div className="space-y-6 animate-fade-in relative pb-20">
+    // Outer Container: Grows with content, main page handles scrolling
+    <div className="flex flex-col gap-4 animate-fade-in pb-20">
       
       {/* Header / Day Cycle */}
-      <div className="flex justify-between items-center bg-card p-4 rounded-2xl border border-gray-800">
+      <div className="shrink-0 flex justify-between items-center bg-card p-3 md:p-4 rounded-2xl border border-gray-800 sticky top-0 z-30 shadow-xl">
         <div>
-          <h2 className="text-xl font-bold text-white">Daily Operations</h2>
-          <p className="text-xs text-gray-400">{new Date().toDateString()}</p>
+          <h2 className="text-base md:text-xl font-bold text-white">Daily Ops</h2>
+          <p className="text-[10px] md:text-xs text-gray-400">{new Date().toDateString()}</p>
         </div>
         <div>
           {!isDayActive ? (
-            <button onClick={startDay} className="bg-green-600 text-white px-6 py-2 rounded-xl font-bold flex items-center gap-2 hover:bg-green-500 shadow-lg shadow-green-900/20">
-              <Sun size={18} /> START DAY
+            <button onClick={startDay} className="bg-green-600 text-white px-3 py-1.5 md:px-6 md:py-2 text-xs md:text-base rounded-xl font-bold flex items-center gap-2 hover:bg-green-500 shadow-lg shadow-green-900/20 active:scale-95 transition-transform">
+              <Sun size={14} className="md:w-4 md:h-4" /> <span>START DAY</span>
             </button>
           ) : (
-            <button onClick={() => setShowEndDayModal(true)} className="bg-gray-800 text-gray-300 border border-gray-700 px-6 py-2 rounded-xl font-bold flex items-center gap-2 hover:bg-gray-700 hover:text-white">
-              <Moon size={18} /> END DAY
+            <button onClick={() => setShowEndDayModal(true)} className="bg-gray-800 text-gray-300 border border-gray-700 px-3 py-1.5 md:px-6 md:py-2 text-xs md:text-base rounded-xl font-bold flex items-center gap-2 hover:bg-gray-700 hover:text-white active:scale-95 transition-transform">
+              <Moon size={14} className="md:w-4 md:h-4" /> <span>END DAY</span>
             </button>
           )}
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-full">
+      {/* Main Content Area - Stacks vertically on mobile, Grid on desktop */}
+      <div className="flex flex-col md:grid md:grid-cols-2 gap-4">
         
-        {/* Left Col: Daily Routines */}
-        <div className="space-y-4">
-          <div className="flex items-center gap-2 text-cyan">
-            <RefreshCw size={20} />
-            <h3 className="font-bold uppercase tracking-wider text-sm">Daily Routines</h3>
+        {/* Top/Left: Daily Routines - Height adjusts to content */}
+        <div className="flex flex-col">
+          <div className="shrink-0 flex items-center gap-2 text-cyan mb-2 pl-1">
+            <RefreshCw size={14} className="md:w-[18px]" />
+            <h3 className="font-bold uppercase tracking-wider text-[10px] md:text-sm">Daily Routines</h3>
           </div>
           
-          <div className="bg-card border border-gray-800 rounded-2xl p-4 min-h-[300px]">
+          <div className="flex flex-col bg-card border border-gray-800 rounded-2xl p-3 md:p-4 h-full">
+            {/* Input */}
             <div className="flex gap-2 mb-4">
                <input 
                 value={newTaskTitle} 
                 onChange={e => setNewTaskTitle(e.target.value)} 
                 placeholder="Add daily routine..."
-                className="flex-1 bg-bg border border-gray-700 rounded-lg px-3 py-2 text-sm text-white focus:border-cyan outline-none"
+                className="flex-1 bg-bg border border-gray-700 rounded-lg px-3 py-2 text-xs md:text-sm text-white focus:border-cyan outline-none"
               />
-              <button onClick={() => addTask('routine')} className="bg-cyan/20 text-cyan p-2 rounded-lg font-bold">+</button>
+              <button onClick={() => addTask('routine')} className="bg-cyan/20 text-cyan p-2 rounded-lg font-bold text-xs md:text-base">+</button>
             </div>
             
+            {/* List - No internal scroll, expands parent */}
             <div className="space-y-2">
               {tasks.filter(t => t.type === 'routine').map(task => {
                 const isDone = task.status === 'done';
                 return (
-                  <div key={task.id} className={`flex items-center justify-between p-3 rounded-xl border transition ${isDone ? 'bg-gray-900/30 border-gray-800 opacity-60' : 'bg-bg border-gray-700'}`}>
-                    <div className="flex items-center gap-3">
+                  <div key={task.id} className={`flex items-center justify-between p-2 md:p-3 rounded-xl border transition ${isDone ? 'bg-gray-900/30 border-gray-800 opacity-60' : 'bg-bg border-gray-700'}`}>
+                    <div className="flex items-center gap-2 md:gap-3 overflow-hidden">
                       <button 
                         onClick={() => startWorkflow(task)}
-                        className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all ${isDone ? 'bg-cyan text-black' : 'bg-cyan/10 text-cyan hover:bg-cyan hover:text-black'}`}
+                        className={`w-6 h-6 md:w-8 md:h-8 shrink-0 rounded-lg flex items-center justify-center transition-all ${isDone ? 'bg-cyan text-black' : 'bg-cyan/10 text-cyan hover:bg-cyan hover:text-black'}`}
                       >
-                         {isDone ? <Check size={16}/> : <Play size={14} fill="currentColor"/>}
+                         {isDone ? <Check size={14}/> : <Play size={12} fill="currentColor"/>}
                       </button>
-                      <div className="flex flex-col">
-                        <span className={isDone ? 'text-gray-500 line-through' : 'text-gray-200'}>{task.title}</span>
+                      <div className="flex flex-col min-w-0">
+                        <span className={`truncate text-xs md:text-sm ${isDone ? 'text-gray-500 line-through' : 'text-gray-200'}`}>{task.title}</span>
                         {/* Streak Badge */}
                         <div className="flex items-center gap-1 mt-0.5">
-                           <span className="text-[10px] text-orange-500 flex items-center gap-0.5" title="Current Streak">
+                           <span className="text-[9px] md:text-[10px] text-orange-500 flex items-center gap-0.5" title="Current Streak">
                              <Zap size={10} fill="currentColor" /> {task.currentStreak || 0}
                            </span>
                            {task.longestStreak !== undefined && task.longestStreak > 0 && (
-                             <span className="text-[10px] text-gray-600 flex items-center gap-0.5" title="Best Streak">
+                             <span className="hidden md:flex text-[10px] text-gray-600 items-center gap-0.5" title="Best Streak">
                                (Best: {task.longestStreak})
                              </span>
                            )}
                         </div>
                       </div>
                     </div>
-                    <button onClick={() => deleteTask(task.id)} className="text-gray-600 hover:text-red-500"><Trash2 size={16} /></button>
+                    <button onClick={() => deleteTask(task.id)} className="text-gray-600 hover:text-red-500 shrink-0"><Trash2 size={14} /></button>
                   </div>
                 );
               })}
-              {tasks.filter(t => t.type === 'routine').length === 0 && <div className="text-gray-600 text-center text-sm py-4">No routines set.</div>}
+              {tasks.filter(t => t.type === 'routine').length === 0 && <div className="text-gray-600 text-center text-[10px] md:text-xs py-10">No routines set.</div>}
             </div>
           </div>
         </div>
 
-        {/* Right Col: One-time Tasks */}
-        <div className="space-y-4">
-          <div className="flex items-center gap-2 text-gold">
-            <Check size={20} />
-            <h3 className="font-bold uppercase tracking-wider text-sm">One-Time Tasks</h3>
+        {/* Bottom/Right: One-Time Tasks - Height adjusts to content */}
+        <div className="flex flex-col">
+          <div className="shrink-0 flex items-center gap-2 text-gold mb-2 pl-1">
+            <Check size={14} className="md:w-[18px]" />
+            <h3 className="font-bold uppercase tracking-wider text-[10px] md:text-sm">One-Time Tasks</h3>
           </div>
 
-          <div className="bg-card border border-gray-800 rounded-2xl p-4 min-h-[300px]">
+          <div className="flex flex-col bg-card border border-gray-800 rounded-2xl p-3 md:p-4 h-full">
+             {/* Input Area */}
              <div className="flex flex-col gap-2 mb-4">
                <div className="flex gap-2">
                  <input 
                   value={newTaskTitle} 
                   onChange={e => setNewTaskTitle(e.target.value)} 
                   placeholder="Add task..."
-                  className="flex-1 bg-bg border border-gray-700 rounded-lg px-3 py-2 text-sm text-white focus:border-gold outline-none"
+                  className="flex-1 bg-bg border border-gray-700 rounded-lg px-3 py-2 text-xs md:text-sm text-white focus:border-gold outline-none"
                 />
-                <button onClick={() => addTask('task')} className="bg-gold/20 text-gold p-2 rounded-lg font-bold">+</button>
+                <button onClick={() => addTask('task')} className="bg-gold/20 text-gold p-2 rounded-lg font-bold text-xs md:text-base">+</button>
                </div>
                <div className="flex items-center gap-2">
-                 <Calendar size={14} className="text-gray-500" />
+                 <Calendar size={12} className="text-gray-500" />
                  <input 
                     type="date" 
                     value={newTaskDDL}
                     onChange={e => setNewTaskDDL(e.target.value)}
-                    className="bg-bg border border-gray-700 rounded px-2 py-1 text-xs text-gray-400 focus:border-gold outline-none"
+                    className="bg-bg border border-gray-700 rounded px-2 py-1 text-[10px] md:text-xs text-gray-400 focus:border-gold outline-none w-full"
                  />
                </div>
             </div>
 
+            {/* List - No internal scroll, expands parent */}
             <div className="space-y-2">
               {tasks.filter(t => t.type === 'task').map(task => {
                 const isDone = task.status === 'done';
                 return (
-                  <div key={task.id} className={`p-4 rounded-xl border flex flex-col gap-3 transition ${isDone ? 'bg-gray-900/50 border-gray-800 opacity-60' : 'bg-bg border-gray-700 hover:border-gray-500'}`}>
+                  <div key={task.id} className={`p-2 md:p-4 rounded-xl border flex flex-col gap-2 transition ${isDone ? 'bg-gray-900/50 border-gray-800 opacity-60' : 'bg-bg border-gray-700 hover:border-gray-500'}`}>
                     <div className="flex justify-between items-start">
-                      <div>
-                        <h4 className={`font-medium ${isDone ? 'text-gray-500 line-through' : 'text-white'}`}>{task.title}</h4>
+                      <div className="min-w-0">
+                        <h4 className={`font-medium text-xs md:text-sm truncate ${isDone ? 'text-gray-500 line-through' : 'text-white'}`}>{task.title}</h4>
                         {task.deadline && (
-                          <div className={`text-[10px] flex items-center gap-1 mt-1 ${getDeadlineColor(task.deadline)}`}>
+                          <div className={`text-[9px] md:text-[10px] flex items-center gap-1 mt-1 ${getDeadlineColor(task.deadline)}`}>
                             <Clock size={10} /> DDL: {task.deadline}
                           </div>
                         )}
                       </div>
-                      <button onClick={() => deleteTask(task.id)} className="text-gray-600 hover:text-red-500"><X size={16} /></button>
+                      <button onClick={() => deleteTask(task.id)} className="text-gray-600 hover:text-red-500 shrink-0 ml-2"><X size={14} /></button>
                     </div>
                     
                     {!isDone ? (
                       <div className="flex items-center gap-2">
                          <button 
                           onClick={() => startWorkflow(task)}
-                          className="flex-1 bg-gold text-black py-2 rounded-lg font-bold text-sm flex items-center justify-center gap-2 hover:bg-yellow-400"
+                          className="flex-1 bg-gold text-black py-1 md:py-1.5 rounded-lg font-bold text-[10px] md:text-sm flex items-center justify-center gap-2 hover:bg-yellow-400"
                         >
-                          <Play size={14} /> START
+                          <Play size={10} /> START
                         </button>
                       </div>
                     ) : (
-                      <div className="flex items-center gap-2 text-xs text-gray-500">
-                        <Check size={12} /> Completed (Will archive tonight)
-                        {task.logs.length > 0 && <span className="ml-auto flex items-center gap-1"><MessageSquare size={12}/> {task.logs.length} steps</span>}
+                      <div className="flex items-center gap-2 text-[10px] md:text-xs text-gray-500">
+                        <Check size={12} /> Completed
+                        {task.logs.length > 0 && <span className="ml-auto flex items-center gap-1"><MessageSquare size={10}/> {task.logs.length}</span>}
                       </div>
                     )}
                   </div>
                 );
               })}
-               {tasks.filter(t => t.type === 'task').length === 0 && <div className="text-gray-600 text-center text-sm py-4">Inbox zero.</div>}
+               {tasks.filter(t => t.type === 'task').length === 0 && <div className="text-gray-600 text-center text-[10px] md:text-xs py-10">Inbox zero.</div>}
             </div>
           </div>
         </div>
@@ -376,7 +382,7 @@ export const Daily: React.FC = () => {
           <div className="w-full max-w-lg bg-card border border-gray-800 rounded-2xl p-6 shadow-2xl relative">
             <div className="absolute top-4 right-4 text-xs text-gray-500 uppercase tracking-widest">{workflowPhase} MODE</div>
             
-            <h2 className="text-2xl font-bold text-white mb-6 border-b border-gray-800 pb-4">{activeTask.title}</h2>
+            <h2 className="text-xl md:text-2xl font-bold text-white mb-6 border-b border-gray-800 pb-4 pr-6">{activeTask.title}</h2>
 
             {/* Previous History */}
             <div className="mb-4">
@@ -393,7 +399,7 @@ export const Daily: React.FC = () => {
                   value={currentStepInput}
                   onChange={e => setCurrentStepInput(e.target.value)}
                   placeholder="e.g. Write the introduction paragraph..."
-                  className="w-full bg-black border border-gray-700 rounded-xl p-4 text-white focus:border-cyan outline-none"
+                  className="w-full bg-black border border-gray-700 rounded-xl p-4 text-white focus:border-cyan outline-none text-sm"
                 />
                 <div className="flex items-center gap-4">
                    <div className="flex items-center gap-2 bg-black px-3 py-2 rounded-lg border border-gray-700">
@@ -402,14 +408,14 @@ export const Daily: React.FC = () => {
                         type="number" 
                         value={timerDuration} 
                         onChange={e => setTimerDuration(parseInt(e.target.value) || 10)}
-                        className="w-12 bg-transparent text-white text-center outline-none"
+                        className="w-8 md:w-12 bg-transparent text-white text-center outline-none text-sm"
                       />
                       <span className="text-xs text-gray-500">min</span>
                    </div>
                    <button 
                     onClick={startStep} 
                     disabled={!currentStepInput.trim()}
-                    className="flex-1 bg-cyan text-black py-3 rounded-xl font-bold disabled:opacity-50 hover:bg-cyan/90"
+                    className="flex-1 bg-cyan text-black py-3 rounded-xl font-bold disabled:opacity-50 hover:bg-cyan/90 text-sm md:text-base"
                    >
                      START TIMER
                    </button>
@@ -422,16 +428,16 @@ export const Daily: React.FC = () => {
               <div className="text-center space-y-8 animate-fade-in py-8">
                 <div className="space-y-2">
                   <div className="text-gray-400 text-sm uppercase tracking-widest">Current Step</div>
-                  <div className="text-xl text-white font-medium">{activeTask.logs[activeTask.logs.length - 1]?.step}</div>
+                  <div className="text-lg md:text-xl text-white font-medium px-4">{activeTask.logs[activeTask.logs.length - 1]?.step}</div>
                 </div>
-                <div className="text-7xl font-mono font-bold text-cyan tabular-nums">
+                <div className="text-6xl md:text-7xl font-mono font-bold text-cyan tabular-nums">
                   {formatTime(timeLeft)}
                 </div>
                 <div className="flex gap-4">
-                  <button onClick={() => setIsTimerRunning(!isTimerRunning)} className="flex-1 bg-gray-700 text-white py-3 rounded-xl font-bold">
+                  <button onClick={() => setIsTimerRunning(!isTimerRunning)} className="flex-1 bg-gray-700 text-white py-3 rounded-xl font-bold text-sm">
                     {isTimerRunning ? <span className="flex items-center justify-center gap-2"><Pause size={18} /> PAUSE</span> : <span className="flex items-center justify-center gap-2"><Play size={18}/> RESUME</span>}
                   </button>
-                  <button onClick={finishStep} className="flex-1 bg-gray-800 border border-cyan/30 text-cyan py-3 rounded-xl font-bold">
+                  <button onClick={finishStep} className="flex-1 bg-gray-800 border border-cyan/30 text-cyan py-3 rounded-xl font-bold text-sm">
                     FINISH EARLY
                   </button>
                 </div>
@@ -452,20 +458,20 @@ export const Daily: React.FC = () => {
                 <div className="grid grid-cols-1 gap-3">
                   <button 
                     onClick={() => handleReviewDecision('continue')}
-                    className="w-full bg-cyan text-black p-4 rounded-xl font-bold flex items-center justify-between group hover:bg-cyan/90"
+                    className="w-full bg-cyan text-black p-4 rounded-xl font-bold flex items-center justify-between group hover:bg-cyan/90 text-sm"
                   >
                     <span>Continue Working</span>
                     <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
                   </button>
                   <button 
                     onClick={() => handleReviewDecision('break')}
-                    className="w-full bg-gray-800 text-white p-4 rounded-xl font-bold border border-gray-700 hover:bg-gray-700"
+                    className="w-full bg-gray-800 text-white p-4 rounded-xl font-bold border border-gray-700 hover:bg-gray-700 text-sm"
                   >
                     Take a Break (Save & Close)
                   </button>
                    <button 
                     onClick={() => handleReviewDecision('complete')}
-                    className="w-full bg-transparent text-green-500 p-4 rounded-xl font-bold border border-green-500/30 hover:bg-green-500/10"
+                    className="w-full bg-transparent text-green-500 p-4 rounded-xl font-bold border border-green-500/30 hover:bg-green-500/10 text-sm"
                   >
                     Mark Task as Complete
                   </button>
@@ -481,7 +487,7 @@ export const Daily: React.FC = () => {
       {/* END DAY MODAL */}
       {showEndDayModal && (
         <div className="fixed inset-0 z-50 bg-black/90 flex flex-col items-center justify-center p-4 animate-fade-in">
-           <div className="w-full max-w-md bg-card border border-gray-800 rounded-2xl p-8">
+           <div className="w-full max-w-md bg-card border border-gray-800 rounded-2xl p-6 md:p-8">
              <h2 className="text-2xl font-bold text-white mb-2">End of Day Report</h2>
              <p className="text-gray-400 text-sm mb-6">Archive today's progress and update habit streaks.</p>
              
@@ -493,7 +499,7 @@ export const Daily: React.FC = () => {
                      <button 
                       key={emoji} 
                       onClick={() => setEndDayMood(emoji)}
-                      className={`text-2xl p-3 rounded-xl bg-bg border ${endDayMood === emoji ? 'border-cyan bg-cyan/10' : 'border-gray-700 hover:border-gray-500'}`}
+                      className={`text-2xl p-2 md:p-3 rounded-xl bg-bg border ${endDayMood === emoji ? 'border-cyan bg-cyan/10' : 'border-gray-700 hover:border-gray-500'}`}
                      >
                        {emoji}
                      </button>
@@ -506,7 +512,7 @@ export const Daily: React.FC = () => {
                   <textarea 
                     value={endDayReflection}
                     onChange={e => setEndDayReflection(e.target.value)}
-                    className="w-full bg-bg border border-gray-700 rounded-xl p-3 text-white h-24 focus:border-cyan outline-none resize-none"
+                    className="w-full bg-bg border border-gray-700 rounded-xl p-3 text-white h-24 focus:border-cyan outline-none resize-none text-sm"
                     placeholder="What went well? What didn't?"
                   />
                </div>
@@ -519,8 +525,8 @@ export const Daily: React.FC = () => {
                </div>
 
                <div className="flex gap-3 mt-4">
-                 <button onClick={confirmEndDay} className="flex-1 bg-white text-black py-3 rounded-xl font-bold hover:bg-gray-200">Confirm & Sleep</button>
-                 <button onClick={() => setShowEndDayModal(false)} className="px-4 py-3 text-gray-500 font-bold hover:text-white">Cancel</button>
+                 <button onClick={confirmEndDay} className="flex-1 bg-white text-black py-3 rounded-xl font-bold hover:bg-gray-200 text-sm">Confirm & Sleep</button>
+                 <button onClick={() => setShowEndDayModal(false)} className="px-4 py-3 text-gray-500 font-bold hover:text-white text-sm">Cancel</button>
                </div>
              </div>
            </div>
